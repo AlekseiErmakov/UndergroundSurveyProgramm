@@ -1,5 +1,7 @@
 package PKandRadius;
 
+import jdk.jshell.tool.JavaShellToolBuilder;
+
 import javax.lang.model.element.Name;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -10,8 +12,9 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.awt.FileDialog;
 
-public class PKRGui extends JFrame {
+public class PKRGui<Shell> extends JFrame {
     int d = 12;
     int rows = 100;
     int c = 7;
@@ -119,6 +122,16 @@ public class PKRGui extends JFrame {
 
     double minimalPK;
 
+    JFileChooser jFileChooser = null;
+
+    String[][] FileFilters ={{"Файлы Word(*.doc)","*.docx"},
+            {"Файлы WordPad(*.txt)","*.txt"},
+            {"Файлы Sokkia(*.sdr)","*.sdr"},
+            {"Файлы Word(*.*)","*."}};
+
+
+
+
     public PKRGui() {
         super("Расчет пикетов радиусов и прокладок");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -136,7 +149,7 @@ public class PKRGui extends JFrame {
         ImportBL.addActionListener(new ImportBaseLineAction());
         fileMenu.addSeparator();
         fileMenu.add(SaveBL);
-
+        SaveBL.addActionListener(new SaveBaselineAction());
         ViewMenu.add(View);
         ViewMenu.add(View2);
 
@@ -154,50 +167,88 @@ public class PKRGui extends JFrame {
 
 
     }
+
     class ImportBaseLineAction implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            try {
+
+            JFileChooser fileopen = new JFileChooser();
+            int ret = fileopen.showDialog(null, "Открыть файл");
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                File MyBasefile = fileopen.getSelectedFile();
+                try {
 
 
-                File myFile = new File("C:/Java/Import Base2.txt");
-                FileReader filereader = new FileReader(myFile);
-                BufferedReader reader = new BufferedReader(filereader);
-                String line = null;
-                while ((line = reader.readLine()) != null){
-                    String[] base = line.split("\t");
-                    BaseLine.add(base);
 
+                    FileReader filereader = new FileReader(MyBasefile);
+                    BufferedReader reader = new BufferedReader(filereader);
+                    String line = null;
+                    X1text.setText("");
+                    X2text.setText("");
+                    Y1text.setText("");
+                    Y2text.setText("");
+                    H1text.setText("");
+                    H2text.setText("");
+                    PK1text.setText("");
+                    PK2text.setText("");
+                    BaseLine.clear();
+                    while ((line = reader.readLine()) != null) {
+                        String[] base = line.split("\t");
+                        BaseLine.add(base);
+
+                    }
+                    X1text.setText(BaseLine.get(0)[0]);
+                    X2text.setText(BaseLine.get(0)[1]);
+                    Y1text.setText(BaseLine.get(1)[0]);
+                    Y2text.setText(BaseLine.get(1)[1]);
+                    H1text.setText(BaseLine.get(2)[0]);
+                    H2text.setText(BaseLine.get(2)[1]);
+                    PK1text.setText(BaseLine.get(3)[0]);
+                    PK2text.setText(BaseLine.get(3)[1]);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-                X1text.setText(BaseLine.get(0)[0]);
-                X2text.setText(BaseLine.get(0)[1]);
-                Y1text.setText(BaseLine.get(1)[0]);
-                Y2text.setText(BaseLine.get(1)[1]);
-                H1text.setText(BaseLine.get(2)[0]);
-                H2text.setText(BaseLine.get(2)[1]);
-                PK1text.setText(BaseLine.get(3)[0]);
-                PK2text.setText(BaseLine.get(3)[1]);
-            }catch (Exception ex){
-                ex.printStackTrace();
             }
         }
     }
     class ImportCoordAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            try {
-                File myFile = new File("C:/Java/Import test.txt");
-                FileReader filereader = new FileReader(myFile);
-                BufferedReader reader = new BufferedReader(filereader);
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    String[] point = line.split("\t");
-                    DataCoordin.add(point);
 
+
+
+            JFileChooser fileopen = new JFileChooser();
+            int ret = fileopen.showDialog(null, "Открыть файл");
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                File Myfile = fileopen.getSelectedFile();
+
+
+                try {
+
+
+                    FileReader filereader = new FileReader(Myfile);
+                    BufferedReader reader = new BufferedReader(filereader);
+                    String line = null;
+                    DataCoordin.clear();
+                    for (int i = 0; i < 40; i++) {
+
+                        NameTextField[i].setText("");
+                        XTFields[i].setText("");
+                        YTFields[i].setText("");
+                        HTFields[i].setText("");
+
+                    }
+                    while ((line = reader.readLine()) != null) {
+                        String[] point = line.split("\t");
+                        DataCoordin.add(point);
+
+                    }
+
+                    reader.close();
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-                reader.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
             }
             for (int i = 0;i<DataCoordin.size(); i++){
                 System.out.println(DataCoordin.get(i)[2]);
@@ -229,7 +280,48 @@ public class PKRGui extends JFrame {
 
         }
     }
+    class SaveBaselineAction implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
 
+            JFileChooser fileopen = new JFileChooser();
+            int ret = fileopen.showSaveDialog(null);
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                File Myfile = fileopen.getSelectedFile();
+
+                BaseLine.clear();
+
+                String point1[] = {X1text.getText(),X2text.getText()};
+                BaseLine.add(0,point1);
+                String point2[] = {Y1text.getText(),Y2text.getText()};
+                BaseLine.add(1,point2);
+                String point3[] = {H1text.getText(),H2text.getText()};
+                BaseLine.add(2,point3);
+                String point4[] = {PK1text.getText(),PK2text.getText()};
+                BaseLine.add(3,point4);
+
+
+                int i;
+                int j;
+                final String LS = System.lineSeparator();
+                try {
+                    FileWriter fileWriter = new FileWriter(Myfile);
+                    for (i = 0; i < BaseLine.size(); i++) {
+
+
+                        for (j = 0; j < 2; j++) {
+
+                            fileWriter.write(BaseLine.get(i)[j] + "\t");
+                        }
+                        fileWriter.write(LS);
+                    }
+                    fileWriter.flush();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
     class PanelCenter extends JPanel {
 
 
@@ -378,6 +470,7 @@ public class PKRGui extends JFrame {
                     strProklade = String.format("%.3f ", Prok);
                     ProklArray.add(strProklade);
                 }
+                System.out.println(ProklArray);
             }
         }
 
@@ -404,26 +497,34 @@ public class PKRGui extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
 
-                for (int i = 0; i<RadArray.size(); i++){
+                JFileChooser fileopen = new JFileChooser();
+                int ret = fileopen.showSaveDialog(null);
+                if (ret == JFileChooser.APPROVE_OPTION) {
+                    File Myfile = fileopen.getSelectedFile();
 
-                    String point[] = {NumArray.get(i),NameArray.get(i),DevArray.get(i),Xarray.get(i),Yarray.get(i),Harray.get(i),PKarray.get(i),RadArray.get(i),DeltaHArray.get(i),GorPKarray.get(i),ProklArray.get(i)};
-                    Results.add(i,point);
-                }
-                int i;int j;
-                final String LS= System.lineSeparator();
-                try {
-                    FileWriter fileWriter= new FileWriter(new File("C:/Java/Data2.txt"));
-                     for (i=0; i<Results.size(); i++){
-                    System.out.println();
-                    fileWriter.write(LS);
-                        for (j=0; j<10; j++){
-                            System.out.print(Results.get(i)[j]+"\t");
-                            fileWriter.write(Results.get(i)[j]+"\t");
-                        }
+                    for (int i = 0; i < RadArray.size(); i++) {
+
+                        String point[] = {NumArray.get(i), NameArray.get(i), Xarray.get(i), Yarray.get(i), Harray.get(i), GorPKarray.get(i), PKarray.get(i), RadArray.get(i), DeltaHArray.get(i), DevArray.get(i), ProklArray.get(i)};
+
+                        Results.add(i, point);
                     }
-                    fileWriter.flush();
-                }catch (Exception ex){
-                    ex.printStackTrace();
+                    int i;
+                    int j;
+                    final String LS = System.lineSeparator();
+                    try {
+                        FileWriter fileWriter = new FileWriter(Myfile);
+                        for (i = 0; i < Results.size(); i++) {
+                            System.out.println();
+                            fileWriter.write(LS);
+                            for (j = 0; j < 11; j++) {
+                                System.out.print(Results.get(i)[j] + "\t");
+                                fileWriter.write(Results.get(i)[j] + "\t");
+                            }
+                        }
+                        fileWriter.flush();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
 
