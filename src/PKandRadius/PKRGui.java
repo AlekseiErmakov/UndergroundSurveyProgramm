@@ -488,7 +488,7 @@ public class PKRGui<Shell> extends JFrame {
                 for (int i = 0; i < XTFields.length; i++) {
                     XTFields[i].setText("");
                     YTFields[i].setText("");
-                    HTFields[i].setText("");
+                    HTFields[i].setText("1");
                     GORPktTFields[i].setText("");
                     PKTFields[i].setText("");
                     DevTFields[i].setText("");
