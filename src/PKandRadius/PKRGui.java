@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.RoundRectangle2D;
 import java.io.*;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
@@ -416,9 +417,10 @@ public class PKRGui<Shell> extends JFrame {
             int d2 = 246;
             int d3 = 20;
             int c1 = 200;
-            int c2 = 230;
+            int c2 = 200;
             int q = 50;
             int mas;
+            int whpoint = 10;
             g.fillOval(c1 - d1 / 2, c2 - d1 / 2, d1, d1);
             g.setColor(Color.WHITE);
             g.fillOval(c1 - d2 / 2, c2 - d2 / 2, d2, d2);
@@ -427,8 +429,14 @@ public class PKRGui<Shell> extends JFrame {
             g.drawLine(c1 - d1 / 2 - q, c2, q + c1 + d1 / 2, c2);
             g.drawLine(c1 - d1 / 2, c2 - d1 / 2, c1 + d1 / 2, c2 + d1 / 2);
             g.drawLine(c1 - d1 / 2, c2 + d1 / 2, c1 + d1 / 2, c2 - d1 / 2);
-
-
+            Graphics2D g2 = (Graphics2D) g;
+            for(int i=0; i<Results.size(); i++) {
+                double x;
+                double y;
+                x= c1 + (Double.parseDouble(Results.get(i)[9])-whpoint/2);
+                y= c2 - (Double.parseDouble(Results.get(i)[8])-whpoint/2);
+                g2.draw(new RoundRectangle2D.Double(x, y, whpoint, whpoint, 2, 2));
+            }
         }
     }
 
@@ -629,7 +637,7 @@ public class PKRGui<Shell> extends JFrame {
                     Harray.add(HTFields[i].getText());
 
                 }
-
+               repaint();
 
 
 
