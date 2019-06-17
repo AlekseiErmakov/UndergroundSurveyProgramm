@@ -639,7 +639,7 @@ public class PKRGui<Shell> extends JFrame {
 
     class PanelLeft extends JPanel {
 
-        Dimension dimension = new Dimension(1000, 30);
+        Dimension dimension = new Dimension(1100, 30);
         Dimension panelDim = new Dimension(2000, 600);
 
         public PanelLeft() {
