@@ -1,5 +1,6 @@
 package PKandRadius;
 
+import jdk.jfr.StackTrace;
 import jdk.jshell.tool.JavaShellToolBuilder;
 
 import javax.lang.model.element.Name;
@@ -131,11 +132,11 @@ public class PKRGui<Shell> extends JFrame {
             {"Файлы Word(*.*)","*."}};
 
 
-
+    JButton PaintPointBut = new JButton("Отобразить точки");
 
     public PKRGui() {
         super("Расчет пикетов радиусов и прокладок");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(HIDE_ON_CLOSE);
 
         setVisible(true);
 
@@ -400,12 +401,21 @@ public class PKRGui<Shell> extends JFrame {
 
 
     class PanelEast extends JPanel {
+        private double x;
+        private double y;
+        private double mk;
+        private double dx;
+        private double dy;
+        private double dmk;
         public PanelEast() {
+            setLayout(new BorderLayout());
             JTextField field = new JTextField("                                      " +
                     "         Поперечный разрез", 40);
-            add(field);
+            add(field,BorderLayout.NORTH);
             field.setEditable(false);
             field.setBackground(Color.WHITE);
+            add(PaintPointBut,BorderLayout.SOUTH);
+            PaintPointBut.addActionListener(new PaintPointAction());
         }
 
         @Override
@@ -421,6 +431,7 @@ public class PKRGui<Shell> extends JFrame {
             int q = 50;
             int mas;
             int whpoint = 10;
+
             g.fillOval(c1 - d1 / 2, c2 - d1 / 2, d1, d1);
             g.setColor(Color.WHITE);
             g.fillOval(c1 - d2 / 2, c2 - d2 / 2, d2, d2);
@@ -430,14 +441,37 @@ public class PKRGui<Shell> extends JFrame {
             g.drawLine(c1 - d1 / 2, c2 - d1 / 2, c1 + d1 / 2, c2 + d1 / 2);
             g.drawLine(c1 - d1 / 2, c2 + d1 / 2, c1 + d1 / 2, c2 - d1 / 2);
             Graphics2D g2 = (Graphics2D) g;
-            for(int i=0; i<Results.size(); i++) {
-                double x;
-                double y;
-                x= c1 + (Double.parseDouble(Results.get(i)[9])-whpoint/2);
-                y= c2 - (Double.parseDouble(Results.get(i)[8])-whpoint/2);
-                g2.draw(new RoundRectangle2D.Double(x, y, whpoint, whpoint, 2, 2));
+             try {
+
+
+                     dx = Double.parseDouble(DevArray.get(2));
+                     dy = Double.parseDouble(DeltaHArray.get(2));
+                     dmk = Double.parseDouble(RadArray.get(2));
+
+                     mk = d2 / (2*dmk);
+                     System.out.println(mk);
+                     x = c1 + mk*dx - whpoint / 2;
+                     y = c2 - mk*dy - whpoint / 2;
+                     g2.draw(new RoundRectangle2D.Double(x, y, whpoint, whpoint, 2, 2));
+
+             }catch (Exception ex){
+                 System.out.println(RadTFields[1].getText());
+             }
+        }
+        class PaintPointAction implements ActionListener{
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(DevTFields[2].getText());
+                System.out.println(dx);
+                System.out.println(dy);
+                System.out.println(dmk);
+                System.out.println(x);
+                System.out.println(y);
+                System.out.println(mk);
+                repaint();
             }
         }
+
     }
 
     class PanelBottom extends JPanel {
@@ -488,7 +522,7 @@ public class PKRGui<Shell> extends JFrame {
                 for (int i = 0; i < XTFields.length; i++) {
                     XTFields[i].setText("");
                     YTFields[i].setText("");
-                    HTFields[i].setText("1");
+                    HTFields[i].setText("");
                     GORPktTFields[i].setText("");
                     PKTFields[i].setText("");
                     DevTFields[i].setText("");
