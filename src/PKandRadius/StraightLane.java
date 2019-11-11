@@ -86,13 +86,13 @@ public class StraightLane extends JFrame implements StringRes {
         fillUneditableCentrFields(ResTip,ResTab,resLength,ResTip.length);
     }
     private void addControlButtons(){
-        SaveBLButton = addButton(SAVEBL,new SaveAction(BaseText),BaseLinePanel);
-        ClearBlButton = addButton(CLEARBL,new ClearAction(BaseText,0),BaseLinePanel);
-        ImportBLButton = addButton(IMPORTBL,new ImportAction(BaseText,4,2,0,1),BaseLinePanel);
+        SaveBLButton = addButton(SAVEBL,controlAction,BaseLinePanel);
+        ClearBlButton = addButton(CLEARBL,controlAction,BaseLinePanel);
+        ImportBLButton = addButton(IMPORTBL,controlAction,BaseLinePanel);
 
         CountButton = addButton(COUNT,controlAction,ReasultPanel);
-        ClearButton = addButton(CLEARPOINTS,new ClearAction(ResTab,1),ReasultPanel);
-        SaveResultsButton = addButton(SAVERS,new SaveAction(ResTab),ReasultPanel);
+        ClearButton = addButton(CLEARPOINTS,controlAction,ReasultPanel);
+        SaveResultsButton = addButton(SAVERS,controlAction,ReasultPanel);
         ImportCoordsButton = addButton(IMPORTPOINTS,controlAction,ReasultPanel);
     }
 
@@ -141,14 +141,6 @@ public class StraightLane extends JFrame implements StringRes {
         return button;
 
     }
-    public boolean chek(String S) {
-        try {
-            forcheck = Double.parseDouble(S);
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
     class ControlAction implements ActionListener{
         BaseLine BL;
         BasePoint Fp;
@@ -164,6 +156,12 @@ public class StraightLane extends JFrame implements StringRes {
                 case IMPORTPOINTS:
                     importSDR();
                     break;
+                case CLEARPOINTS:
+                    clearRes();
+                    break;
+                case CLEARBL:
+                    clearBL();
+                    break;
             }
 
         }
@@ -171,9 +169,15 @@ public class StraightLane extends JFrame implements StringRes {
                 LofP.add(0,null);
                 LofR.add(0,null);
             try{
-                Fp=new BasePoint(Double.parseDouble(BaseText[0][1].getText()),Double.parseDouble(BaseText[1][1].getText()),Double.parseDouble(BaseText[2][1].getText()),Double.parseDouble(BaseText[3][1].getText()));
+                Fp=new BasePoint(Double.parseDouble(BaseText[0][1].getText()),
+                        Double.parseDouble(BaseText[1][1].getText()),
+                        Double.parseDouble(BaseText[2][1].getText()),
+                        Double.parseDouble(BaseText[3][1].getText()));
                 System.out.println(Fp.toString());
-                Sp=new BasePoint(Double.parseDouble(BaseText[1][2].getText()),Double.parseDouble(BaseText[2][2].getText()),Double.parseDouble(BaseText[3][2].getText()),Double.parseDouble(BaseText[3][2].getText()));
+                Sp=new BasePoint(Double.parseDouble(BaseText[1][2].getText()),
+                        Double.parseDouble(BaseText[2][2].getText()),
+                        Double.parseDouble(BaseText[3][2].getText()),
+                        Double.parseDouble(BaseText[3][2].getText()));
                 System.out.println(Sp.toString());
                 BL=new BaseLine(Fp,Sp);
             }catch (Exception ex){
@@ -181,7 +185,10 @@ public class StraightLane extends JFrame implements StringRes {
             }
             for (int i = 1; i<41;i++){
                 try {
-                    LofP.add(i, new SurveyPoint(ResTab[i][1].getText(), Double.parseDouble(ResTab[i][2].getText()), Double.parseDouble(ResTab[i][3].getText()), Double.parseDouble(ResTab[i][4].getText())));
+                    LofP.add(i, new SurveyPoint(ResTab[i][1].getText(),
+                            Double.parseDouble(ResTab[i][2].getText()),
+                            Double.parseDouble(ResTab[i][3].getText()),
+                            Double.parseDouble(ResTab[i][4].getText())));
                 }catch (Exception ex){
                     LofP.add(i, null);
                 }
@@ -261,50 +268,26 @@ public class StraightLane extends JFrame implements StringRes {
                 return fileName.substring(fileName.lastIndexOf(".")+1);
             else return "";
       }
+      private void clearRes(){
+          for (i = 1; i<ResTab.length; i++ ){
+              for (j = 1;j<ResTab[0].length;j++ ){
+                  ResTab[i][j].setText(" ");
+              }
+          }
+      }
+      private void clearBL(){
+          for (i = 0; i<BaseText.length; i++ ){
+              for (j = 1;j<ResTab[0].length;j++ ){
+                  ResTab[i][j].setText(" ");
+              }
+          }
+      }
 
 
     }
 
-    class ClearAction implements ActionListener{
-        JTextField[][] ClearTextfield;
-        int ii;
 
-        public ClearAction(JTextField[][] ClearTextfield, int ii){
-        this.ii=ii;
-        this.ClearTextfield = ClearTextfield;
-        }
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            for (i = ii; i<ClearTextfield.length; i++ ){
-                for (j = 1;j<ClearTextfield[0].length;j++ ){
-                    ClearTextfield[i][j].setText(" ");
-                }
-            }
-        }
-    }
-    class ImportAction implements ActionListener{
-        JTextField[][] impJtextField;
-        String[] point;
-        ArrayList<String[]> Import = new ArrayList<String[]>();
-        int length1;
-        int length2;
-        int jjj;
-        int iii;
 
-        public ImportAction(JTextField[][] impJtextField,int length1,int length2,int iii,int jjj){
-            this.impJtextField=impJtextField;
-            this.length1=length1;
-            this.length2=length2;
-            this.iii=iii;
-            this.jjj=jjj;
-
-        }
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            Import.clear();
-
-        }
-    }
     class SaveAction implements ActionListener{
         JTextField[][] saveTextfield;
         SaveAction(JTextField[][] saveTextField){
@@ -342,7 +325,7 @@ class MyFilechooser extends JFileChooser{
 }
 class MyJOptionPane extends JOptionPane{
 
-    }
+}
 
 
 
