@@ -3,13 +3,7 @@ package PKandRadius;
 public class Result {
     private BaseLine line;
     private SurveyPoint point;
-    private double radius;
-    private double dev;
-    private double gorLenght;
-    private double gorPiket;
-    private double length;
-    private double deltaH;
-    private double PK;
+    private double radius, dev, gorLenght, gorPiket, length, deltaH, PK;
     private String result;
 
     public Result(BaseLine line,SurveyPoint point){
@@ -65,17 +59,7 @@ public class Result {
     }
 
     public static class Count{
-        private static double x1;
-        private static double y1;
-        private static double h1;
-        private static double pk1;
-        private static double x2;
-        private static double y2;
-        private static double h2;
-        private static double pk2;
-        private static double x;
-        private static double y;
-        private static double h;
+        private static double x1, y1, h1, pk1, x2, y2, h2, pk2, x, y, h;
         private static final int kv=2;
 
         public static void coords(BaseLine LN,SurveyPoint P){

@@ -14,6 +14,9 @@ public interface StringRes {
 
     String ALERT = "Неверный формат";
 
+    String FileFormat = "sdr";
+    String OpenFile ="Отурыть файл";
+
 // private String[] ResTip= {"Номер точки","Название","X","Y","H","Длина по оси","Гор ПК","Накл ПК","Смещение от оси","Превыш. от Оси","Радиус"};
 
 

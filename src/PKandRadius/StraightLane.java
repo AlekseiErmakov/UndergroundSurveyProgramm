@@ -22,7 +22,7 @@ public class StraightLane extends JFrame implements StringRes {
     private  final int size1 = tip.length;
     private  final int size2 = 3;
     private JTextField[][] BaseText = new JTextField[size1][size2];
-    private double[][] BaseForCount = new double[4][2];
+
 
     private final int textsize = 11,
     unedittextsize = 5,
@@ -93,7 +93,7 @@ public class StraightLane extends JFrame implements StringRes {
         CountButton = addButton(COUNT,controlAction,ReasultPanel);
         ClearButton = addButton(CLEARPOINTS,new ClearAction(ResTab,1),ReasultPanel);
         SaveResultsButton = addButton(SAVERS,new SaveAction(ResTab),ReasultPanel);
-        ImportCoordsButton = addButton(IMPORTPOINTS,new ImportAction(ResTab,40,4,1,1),ReasultPanel);
+        ImportCoordsButton = addButton(IMPORTPOINTS,controlAction,ReasultPanel);
     }
 
     private void fillthePanel(int rows,int cols, int hgap, int vgap, JPanel FlowPanel,JPanel GridPanel){
@@ -161,6 +161,9 @@ public class StraightLane extends JFrame implements StringRes {
                 case COUNT:
                     count();
                     break;
+                case IMPORTPOINTS:
+                    importSDR();
+                    break;
             }
 
         }
@@ -182,32 +185,23 @@ public class StraightLane extends JFrame implements StringRes {
                 }catch (Exception ex){
                     LofP.add(i, null);
                 }
-
-
             }
             System.out.println(LofP.get(2));
             for (int i =1;i<41;i++) {
                 if (LofP.get(i)==null){
+                    LofR.add(i,null);
                 }else {
                 LofR.add(i,new Result(BL,LofP.get(i)));
-                ResTab[i][5].setText(String.format("%3s",LofR.get(i).getLength()));
-                ResTab[i][6].setText(String.format("%3s",LofR.get(i).getGorPiket()));
-                ResTab[i][7].setText(String.format("%3s",LofR.get(i).getPK()));
-                ResTab[i][8].setText(String.format("%3s",LofR.get(i).getDev()));
-                ResTab[i][9].setText(String.format("%3s",LofR.get(i).getDeltaH()));
-                ResTab[i][10].setText(String.format("%3s",LofR.get(i).getRadius()));
+                ResTab[i][5].setText(String.format("%.3f",LofR.get(i).getLength()));
+                ResTab[i][6].setText(String.format("%.3f",LofR.get(i).getGorPiket()));
+                ResTab[i][7].setText(String.format("%.3f",LofR.get(i).getPK()));
+                ResTab[i][8].setText(String.format("%.3f",LofR.get(i).getDev()));
+                ResTab[i][9].setText(String.format("%.3f",LofR.get(i).getDeltaH()));
+                ResTab[i][10].setText(String.format("%.3f",LofR.get(i).getRadius()));
                 }
-                //String result = point.toString() + "\t" + getLength() + "\t" + getGorPiket() + "\t" + getPK() +  "\t" + getDev() + "\t" + getDeltaH() + "\t" + getRadius();
             }
-
-
-
-
-
-
-
-        }
-        private void chekAlllane(){
+      }
+      private void chekAlllane(){
             for(int i = 0;i<BaseText.length;i++){
                 for (int j=1;j<BaseText[0].length;j++){
                     try{
@@ -217,12 +211,59 @@ public class StraightLane extends JFrame implements StringRes {
                     }
                 }
             }
-        }
+      }
+      private void importSDR(){
+          ArrayList<String> Pspisok = new ArrayList<>();
+          MyFilechooser fileopen = new MyFilechooser();
+            Pspisok.clear();
+          int ret = fileopen.showDialog(null, "Открыть файл");
+          if (ret == JFileChooser.APPROVE_OPTION) {
+              File Myfile = fileopen.getSelectedFile();
+              if (getFileExtension(Myfile).equals(FileFormat)){
+                try {
+                    FileReader filereader = new FileReader(Myfile);
+                    BufferedReader reader = new BufferedReader(filereader);
+                    String line = null;
+                    while ((line = reader.readLine()) != null) {
+                        Pspisok.add(line);
+                    }
+                    reader.close();
+                }catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+              }
+          }
+          for (int i=4;i>=0;i--){
+              Pspisok.remove(i);
+          }
+          for(int j=0;j<Pspisok.size();j++){
+              char[] temp = Pspisok.get(j).toCharArray();
+              String temp1 ="";
+              String temp2 ="";
+              for (int i=0;i<=19;i++){
+                  temp1 = temp1+temp[i];
+              }
+              for (int i=20;i<temp.length;i++){
+                  temp2=temp2+temp[i];
+              }
+              String temp3 = temp1+" "+temp2;
+              String[] point = temp3.split("\\s+");
+              System.out.println(point);
+              for (int i=0 ; i< 4;i++){
+                 ResTab[j+1][i+1].setText(point[i+1]);
+              }
 
+          }
+      }
+      private  String getFileExtension(File file) {
+            String fileName = file.getName();
+            if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+                return fileName.substring(fileName.lastIndexOf(".")+1);
+            else return "";
+      }
 
 
     }
-
 
     class ClearAction implements ActionListener{
         JTextField[][] ClearTextfield;
@@ -261,38 +302,7 @@ public class StraightLane extends JFrame implements StringRes {
         @Override
         public void actionPerformed(ActionEvent e) {
             Import.clear();
-            MyFilechooser fileopen = new MyFilechooser();
-            int ret = fileopen.showDialog(null, "Открыть файл");
-            if (ret == JFileChooser.APPROVE_OPTION) {
-                File Myfile = fileopen.getSelectedFile();
-                try {
-                    FileReader filereader = new FileReader(Myfile);
-                    BufferedReader reader = new BufferedReader(filereader);
-                    String line = null;
-                    while ((line = reader.readLine()) != null) {
-                        point = line.split("\t");
-                        Import.add(point);
 
-                    }
-                    if (Import.size()>length1){
-
-                    }else{
-                        length1=Import.size();
-                    }
-                    System.out.println(Import.get(2)[1]);
-                for (i=0;i<length1;i++){
-                    for(j=0;j<length2;j++){
-                        impJtextField[i+iii][j+jjj].setText(Import.get(i)[j]);
-                    }
-
-                }
-
-                    reader.close();
-
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
         }
     }
     class SaveAction implements ActionListener{
