@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class StraightLane extends JFrame implements StringRes {
@@ -40,6 +41,10 @@ public class StraightLane extends JFrame implements StringRes {
 
     private JButton CountButton, ClearButton, ClearBlButton, SaveResultsButton,SaveBLButton,ImportCoordsButton,ImportBLButton;
 
+   ControlAction controlAction;
+   ArrayList<SurveyPoint> LofP;
+   ArrayList<Result> LofR;
+
     private final String LS = System.lineSeparator();
     public StraightLane(){
         super(ProgName);
@@ -56,13 +61,16 @@ public class StraightLane extends JFrame implements StringRes {
         straightframe.add(ReasultPanel,BorderLayout.EAST);
 
 
-
+        controlAction = new ControlAction();
         fillBaseLinePanel();
         fillResultPanel();
         addControlButtons();
 
         straightframe.setVisible(true);
         straightframe.setSize(1920,1080);
+
+        LofP=new ArrayList<>();
+        LofR=new ArrayList<>();
 
     }
     private void fillBaseLinePanel(){
@@ -82,7 +90,7 @@ public class StraightLane extends JFrame implements StringRes {
         ClearBlButton = addButton(CLEARBL,new ClearAction(BaseText,0),BaseLinePanel);
         ImportBLButton = addButton(IMPORTBL,new ImportAction(BaseText,4,2,0,1),BaseLinePanel);
 
-        CountButton = addButton(COUNT,new CountAction(),ReasultPanel);
+        CountButton = addButton(COUNT,controlAction,ReasultPanel);
         ClearButton = addButton(CLEARPOINTS,new ClearAction(ResultTable,1),ReasultPanel);
         SaveResultsButton = addButton(SAVERS,new SaveAction(ResultTable),ReasultPanel);
         ImportCoordsButton = addButton(IMPORTPOINTS,new ImportAction(ResultTable,40,4,1,1),ReasultPanel);
@@ -141,45 +149,66 @@ public class StraightLane extends JFrame implements StringRes {
             return false;
         }
     }
-
-    class CcontrollAction implements ActionListener{
+    class ControlAction implements ActionListener{
         BaseLine BL;
+        BasePoint Fp;
+        BasePoint Sp;
+
         @Override
         public void actionPerformed(ActionEvent e) {
-            String command = e.getSource().toString();
-        }
-
-
-        private void count(){
-            double x1,y1,h1,pk1,x2,y2,h2,pk2;
-            for(int i = 0;i<BaseText.length;i++){
-
+            String command = e.getActionCommand();
+            switch (command){
+                case COUNT:
+                    count();
+                    break;
             }
 
+        }
+        private void count(){
+                try{
+                    Fp=new BasePoint(Double.parseDouble(BaseText[0][0].getText()),Double.parseDouble(BaseText[0][1].getText()),Double.parseDouble(BaseText[0][2].getText()));
+                    Sp=new BasePoint(Double.parseDouble(BaseText[0][0].getText()),Double.parseDouble(BaseText[0][1].getText()),Double.parseDouble(BaseText[0][2].getText()));
+                    BL=new BaseLine(Fp,Sp);
+                }catch (Exception ex){
+                    chekAlllane();
+                    return;
+                }
+                try{
+                    for (int i = 0; i<40;i++){
+                        try{
+                            LofP.add(i,new SurveyPoint(ResultTable[i][1].getText(),Double.parseDouble(ResultTable[i][2].getText()),Double.parseDouble(ResultTable[i][2].getText()),Double.parseDouble(ResultTable[i][3].getText())));
+                        }catch (Exception ex){
+
+                        }
+                    }
+                    for (int i =0;i<LofR.size();i++){
+                        LofR.add(i,new Result(BL,LofP.get(i)));
+                    }
+                }catch (Exception ex){
+
+                }
+
 
 
 
         }
-
+        private void chekAlllane(){
+            for(int i = 0;i<BaseText.length;i++){
+                for (int j=1;j<BaseText[0].length;j++){
+                    try{
+                        double a =Double.parseDouble(BaseText[i][j].getText());
+                    } catch (Exception myEx){
+                        BaseText[i][j].setText(ALERT);
+                    }
+                }
+            }
+        }
 
 
 
     }
 
 
-
-
-
-
-
-
-    class CountAction implements ActionListener{
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-
-        }
-    }
     class ClearAction implements ActionListener{
         JTextField[][] ClearTextfield;
         int ii;
