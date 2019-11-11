@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
 
-public class StraightLane extends JFrame {
+public class StraightLane extends JFrame implements StringRes {
     private static int i = 0;
     private static int j = 0;
     private JFrame straightframe = new JFrame();
@@ -17,7 +17,7 @@ public class StraightLane extends JFrame {
 
     private JPanel BaseLinePanel = new JPanel(new FlowLayout());
     private JPanel InBaselinePan = new JPanel();
-
+    private String[] ResTip= {"Номер точки","Название","X","Y","H","Длина по оси","Гор ПК","Накл ПК","Смещение от оси","Превыш. от Оси","Радиус"};
 
     private JPanel inBaselinePan = new JPanel();
     private final String[] tip = {"X","Y","H","PK"};
@@ -38,7 +38,7 @@ public class StraightLane extends JFrame {
 
     private JPanel ReasultPanel = new JPanel();
     private JPanel inResultPanel = new JPanel();
-    private final String[] ResTip= {"Номер точки","Название","X","Y","H","Длина по оси","Гор ПК","Накл ПК","Смещение от оси","Превыш. от Оси","Радиус"};
+
     private final int resLength = 41;
     private final JTextField[][] ResultTable = new JTextField[resLength][ResTip.length];
     private String NameOfTakenPoints[] = new String[resLength-1];
@@ -50,13 +50,13 @@ public class StraightLane extends JFrame {
     private final int CentrHgap = 3;
     private final int CentrVgap = 3;
 
-    JButton CountButton = new JButton("Расчет");
-    JButton ClearButton = new JButton("Очистить");
-    JButton ClearBlButton = new JButton("Очистить БЛ");
-    JButton SaveResultsButton = new JButton("Сохранить результат");
-    JButton SaveBLButton = new JButton("Сохранить Базовую Линию");
-    JButton ImportCoordsButton = new JButton("Импортировать точки");
-    JButton ImportBLButton = new JButton("Импортировать Ось");
+    private JButton CountButton = new JButton("Расчет");
+    private JButton ClearButton = new JButton("Очистить");
+    private JButton ClearBlButton = new JButton("Очистить БЛ");
+    private JButton SaveResultsButton = new JButton("Сохранить результат");
+    private JButton SaveBLButton = new JButton("Сохранить Базовую Линию");
+    private JButton ImportCoordsButton = new JButton("Импортировать точки");
+    private JButton ImportBLButton = new JButton("Импортировать Ось");
 
     private final String LS = System.lineSeparator();
 
@@ -78,7 +78,7 @@ public class StraightLane extends JFrame {
         addButton(SaveBLButton,new SaveAction(BaseText),BaseLinePanel);
         addButton(ClearBlButton,new ClearAction(BaseText,0),BaseLinePanel);
         addButton(ImportBLButton, new ImportAction(BaseText,4,2,0,1),BaseLinePanel);
-
+        JPanel panelGrid = new JPanel(new GridLayout());
         ReasultPanel.setPreferredSize(new Dimension(1300,80));
         fillthePanel(CentrRows,CentrCols,CentrHgap,CentrVgap,ReasultPanel,inResultPanel);
         addJTextFields(resLength,ResTip.length,ResultTable,inResultPanel,textsize,unedittextsize);
@@ -94,14 +94,14 @@ public class StraightLane extends JFrame {
     }
 
 
-    public void fillthePanel(int rows,int cols, int hgap, int vgap, JPanel FlowPanel,JPanel GridPanel){
+    private void fillthePanel(int rows,int cols, int hgap, int vgap, JPanel FlowPanel,JPanel GridPanel){
 
         FlowPanel.setLayout(new FlowLayout());
         GridPanel.setLayout(new GridLayout(rows,cols,hgap,vgap));
         FlowPanel.add(GridPanel);
 
     }
-    public void addJTextFields(int S1,int S2,JTextField[][] jTextField,JPanel panel,int ttsize,int unedtxsize){
+    private void addJTextFields(int S1,int S2,JTextField[][] jTextField,JPanel panel,int ttsize,int unedtxsize){
 
         for( i= 0; i<S1; i++){
             for( j=0; j<S2; j++){
@@ -111,7 +111,7 @@ public class StraightLane extends JFrame {
             }
         }
     }
-    public void fillUneditableLeftFields(String[] field,JTextField[][] jTextField,int S1,int S2){
+    private void fillUneditableLeftFields(String[] field,JTextField[][] jTextField,int S1,int S2){
         for ( i = 0; i<S1; i++ ){
             for(j = 0; j<S2; j++){
                 jTextField[i][0].setText(field[i]);
@@ -119,7 +119,7 @@ public class StraightLane extends JFrame {
             }
         }
     }
-    public void fillUneditableCentrFields(String[] field,JTextField[][] jTextField,int S1,int S2){
+    private void fillUneditableCentrFields(String[] field,JTextField[][] jTextField,int S1,int S2){
         for ( i = 0; i<=S1; i++ ){
             for(j = 0; j<S2; j++){
                 jTextField[0][j].setText(field[j]);
@@ -132,7 +132,7 @@ public class StraightLane extends JFrame {
             jTextField[i][0].setEditable(false);
         }
     }
-    public void addButton(JButton button,ActionListener listener,JPanel panel){
+    private void addButton(JButton button,ActionListener listener,JPanel panel){
         panel.add(button,BorderLayout.SOUTH);
         button.addActionListener(listener);
 
@@ -146,43 +146,7 @@ public class StraightLane extends JFrame {
             return false;
         }
     }
-    public void countCoordsOfPoints() {
-        for (i = 0; i < CoordsOfPoints.length; i++) {
-            for (j = 0; j < XYH; j++) {
-                if (chek(ResultTable[i + 1][j + 2].getText())) {
-                    CoordsOfPoints[i][j] = Double.parseDouble(ResultTable[i + 1][j + 2].getText());
-                } else {
-                    CoordsOfPoints[i][j] = 0;
-                }
-                NameOfTakenPoints[i] = ResultTable[i + 1][2].getText();
 
-            }
-        }
-        for (i = 0; i < resLength - 1; i++) {
-            for (j = 0; j < ResTip.length - 5; j++) {
-                Points[i] = new Point(BaseForCount[0][0], BaseForCount[1][0], BaseForCount[2][0], BaseForCount[0][1], BaseForCount[1][1], BaseForCount[2][1], CoordsOfPoints[i][0], CoordsOfPoints[i][1], CoordsOfPoints[i][2], BaseForCount[3][0], BaseForCount[3][1]);
-                if (CoordsOfPoints[i][0] == 0 || CoordsOfPoints[i][1] == 0) {
-                    ResultTable[i + 1][j + 5].setText(" ");
-                } else if (CoordsOfPoints[i][2] == 0) {
-                    ResultTable[i + 1][5].setText(String.format("%.3f ",Points[i].countgorLength()));
-                    ResultTable[i + 1][6].setText(String.format("%.3f ",Points[i].countGorPK()));
-                    ResultTable[i + 1][7].setText(" ");
-                    ResultTable[i + 1][8].setText(String.format("%.3f ",Points[i].countDev()));
-                    ResultTable[i + 1][9].setText("");
-                    ResultTable[i + 1][10].setText(String.format("%.3f ",Points[i].countRad()));
-
-                } else {
-                    ResultTable[i + 1][5].setText(String.format("%.3f ",Points[i].countgorLength()));
-                    ResultTable[i + 1][6].setText(String.format("%.3f ",Points[i].countGorPK()));
-                    ResultTable[i + 1][7].setText(String.format("%.3f ",Points[i].countPK()));
-                    ResultTable[i + 1][8].setText(String.format("%.3f ",Points[i].countDev()));
-                    ResultTable[i + 1][9].setText(String.format("%.3f ",Points[i].countDeltaH()));
-                    ResultTable[i + 1][10].setText(String.format("%.3f ",Points[i].countRad()));
-                }
-            }
-        }
-
-    }
 
     class CountAction implements ActionListener{
         @Override
@@ -201,7 +165,7 @@ public class StraightLane extends JFrame {
                 }
             }
             if(BaseLine){
-                countCoordsOfPoints();
+
             }
 
         }
@@ -308,6 +272,7 @@ public class StraightLane extends JFrame {
     }
 
 }
+
 class MyFilechooser extends JFileChooser{
 
 }
@@ -316,90 +281,7 @@ class MyJOptionPane extends JOptionPane{
     }
 
 
-class Point {
-    private double x1;
-    private double y1;
-    private double h1;
-    private double pk1;
-    private double x2;
-    private double y2;
-    private double h2;
-    private double pk2;
-    private double x;
-    private double y;
-    private double h;
-    private final int kv=2;
 
-
-
-    public Point(double x1, double y1, double h1,  double x2, double y2, double h2, double x, double y, double h,double pk1, double pk2) {
-        this.x1 = x1;
-        this.y1 = y1;
-        this.h1 = h1;
-        this.pk1 = pk1;
-        this.x2 = x2;
-        this.y2 = y2;
-        this.h2 = h2;
-        this.x = x;
-        this.y = y;
-        this.h = h;
-        pk2 = 0;
-    }
-
-    public double countRad() {
-        return Math.sqrt(Math.pow(((y1 - y) * (h2 - h1) - (h1 - h) * (y2 - y1)), kv) + Math.pow(((x1 - x) * (h2 - h1) - (h1 - h) * (x2 - x1)), kv) + Math.pow(((x1 - x) * (y2 - y1) - (y1 - y) * (x2 - x1)), kv)) / Math.sqrt(Math.pow((x2 - x1), kv) + Math.pow((y2 - y1), kv) + Math.pow((h2 - h1), kv));
-    }
-
-    public double countDev() {
-        return ((y2 - y1) * x - (x2 - x1) * y + x2 * y1 - y2 * x1) / Math.sqrt(Math.pow(y2 - y1, kv) + Math.pow(x2 - x1, kv));
-    }
-
-    public double countgorLength() {
-        return Math.sqrt(Math.pow(x - x1, kv) + Math.pow(y - y1, kv) - Math.pow(countDev(), kv));
-    }
-
-    public double countGorPK() {
-        if (pk1 == 0) {
-            return countgorLength();
-        } else {
-            if (pk2 == 0) {
-                return pk1 + countgorLength();
-            } else {
-                if (pk2 > pk1) {
-                    return pk1 + countgorLength();
-                } else if (pk2 == pk1) {
-                    return 0;
-                } else {
-                    return pk1 - countgorLength();
-                }
-            }
-        }
-    }
-    public double countLength(){
-        return Math.sqrt(Math.pow(x-x1,kv)+Math.pow(y-y1,kv)+Math.pow(h-h1,kv)-Math.pow(countRad(),kv));
-    }
-    public double countPK(){
-        if (pk1 == 0) {
-            return countLength();
-        } else {
-            if (pk2 == 0) {
-                return pk1 + countLength();
-            } else {
-                if (pk2 > pk1) {
-                    return pk1 + countLength();
-                } else if (pk2 == pk1) {
-                    return 0;
-                } else {
-                    return pk1 - countLength();
-                }
-            }
-        }
-    }
-    public double countDeltaH(){
-        return  h -(h1 + (h2-h1)*Math.sqrt(Math.pow(x-x1,kv)+Math.pow(y-y1,kv)-Math.pow(countDev(),kv))/Math.sqrt(Math.pow(x-x1,kv)+Math.pow(y-y1,kv)));
-    }
-
-}
 
 
 
