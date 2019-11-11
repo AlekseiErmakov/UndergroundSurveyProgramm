@@ -162,6 +162,9 @@ public class StraightLane extends JFrame implements StringRes {
         for (i = 1; i < S1; i++) {
             jTextField[i][0].setText(String.format("№ %d", i));
             jTextField[i][0].setEditable(false);
+            for (int j=5;j<jTextField[0].length;j++){
+                jTextField[i][j].setEditable(false);
+            }
         }
     }
 
@@ -338,8 +341,8 @@ public class StraightLane extends JFrame implements StringRes {
 
         private void clearBL() {
             for (i = 0; i < BaseText.length; i++) {
-                for (j = 1; j < ResTab[0].length; j++) {
-                    ResTab[i][j].setText(" ");
+                for (j = 1; j < BaseText[0].length; j++) {
+                    BaseText[i][j].setText(" ");
                 }
             }
         }
