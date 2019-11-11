@@ -302,8 +302,6 @@ public class StraightLane extends JFrame implements StringRes {
                     ie.printStackTrace();
                 }
             }
-
-
             for (int j = 0; j < Pspisok.size(); j++) {
                 char[] temp = Pspisok.get(j).toCharArray();
                 String temp1 = "";
@@ -320,7 +318,6 @@ public class StraightLane extends JFrame implements StringRes {
                 for (int i = 0; i < 4; i++) {
                     ResTab[j + 1][i + 1].setText(point[i + 1]);
                 }
-
             }
         }
 
@@ -387,8 +384,6 @@ public class StraightLane extends JFrame implements StringRes {
                 }
             }
         }
-
-
         public void importBL(){
             MyFilechooser fileopen = new MyFilechooser();
             ArrayList<String> BLspisok = new ArrayList<>();
