@@ -16,7 +16,7 @@ public class BasePoint extends Points {
         this.H = H;
         this.Name = Name;
     }
-    public BasePoint(String Name, double X, double Y, double H, double PK){
+    public BasePoint( double X, double Y, double H, double PK){
         this.X = X;
         this.Y = Y;
         this.H = H;

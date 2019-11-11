@@ -9,6 +9,7 @@ public class Result {
     private double gorPiket;
     private double length;
     private double deltaH;
+    private double PK;
     private String result;
 
     public Result(BaseLine line,SurveyPoint point){
@@ -19,6 +20,7 @@ public class Result {
         gorLenght = Count.gorLength(line, point);
         gorPiket = Count.GorPK(line,point);
         length = Count.Length(line, point);
+        PK = Count.PK(line, point);
         deltaH = Count.DeltaH(line,point);
         result = baseLineResult();
 
@@ -48,8 +50,12 @@ public class Result {
         return deltaH;
     }
 
+    public double getPK() {
+        return PK;
+    }
+
     public String baseLineResult(){
-       String result = point.toString() + "\t" + getRadius() + "\t" + getDev() + "\t" + getGorLenght() +  "\t" + getGorPiket() + "\t" + getLength() + "\t" + getDeltaH();
+       String result = point.toString() + "\t" + getLength() + "\t" + getGorPiket() + "\t" + getPK() +  "\t" + getDev() + "\t" + getDeltaH() + "\t" + getRadius();
        return result;
     }
 
@@ -77,14 +83,19 @@ public class Result {
             y1=LN.getFp().getY();
             h1=LN.getFp().getH();
             pk1=LN.getFp().getPK();
-            x1=LN.getSp().getX();
-            y1=LN.getSp().getY();
-            h1=LN.getSp().getH();
+            x2=LN.getSp().getX();
+            y2=LN.getSp().getY();
+            h2=LN.getSp().getH();
             pk2=LN.getSp().getPK();
+            x=P.getX();
+            y=P.getY();
+            h=P.getH();
         }
 
         public static double Rad(BaseLine LN,SurveyPoint P) {
             coords(LN,P);
+            System.out.println(x1+ "nen");
+
             return Math.sqrt(Math.pow(((y1 - y) * (h2 - h1) - (h1 - h) * (y2 - y1)), kv)
                     + Math.pow(((x1 - x) * (h2 - h1) - (h1 - h) * (x2 - x1)), kv)
                     + Math.pow(((x1 - x) * (y2 - y1) - (y1 - y) * (x2 - x1)), kv))

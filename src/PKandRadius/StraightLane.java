@@ -37,7 +37,7 @@ public class StraightLane extends JFrame implements StringRes {
     CentrHgap = 3,
     CentrVgap = 3;
 
-    private final JTextField[][] ResultTable = new JTextField[resLength][ResTip.length];
+    private final JTextField[][] ResTab = new JTextField[resLength][ResTip.length];
 
     private JButton CountButton, ClearButton, ClearBlButton, SaveResultsButton,SaveBLButton,ImportCoordsButton,ImportBLButton;
 
@@ -82,8 +82,8 @@ public class StraightLane extends JFrame implements StringRes {
     private void fillResultPanel(){
         ReasultPanel.setPreferredSize(new Dimension(1300,80));
         fillthePanel(CentrRows,CentrCols,CentrHgap,CentrVgap,ReasultPanel,inResultPanel);
-        addJTextFields(resLength,ResTip.length,ResultTable,inResultPanel,textsize,unedittextsize);
-        fillUneditableCentrFields(ResTip,ResultTable,resLength,ResTip.length);
+        addJTextFields(resLength,ResTip.length,ResTab,inResultPanel,textsize,unedittextsize);
+        fillUneditableCentrFields(ResTip,ResTab,resLength,ResTip.length);
     }
     private void addControlButtons(){
         SaveBLButton = addButton(SAVEBL,new SaveAction(BaseText),BaseLinePanel);
@@ -91,9 +91,9 @@ public class StraightLane extends JFrame implements StringRes {
         ImportBLButton = addButton(IMPORTBL,new ImportAction(BaseText,4,2,0,1),BaseLinePanel);
 
         CountButton = addButton(COUNT,controlAction,ReasultPanel);
-        ClearButton = addButton(CLEARPOINTS,new ClearAction(ResultTable,1),ReasultPanel);
-        SaveResultsButton = addButton(SAVERS,new SaveAction(ResultTable),ReasultPanel);
-        ImportCoordsButton = addButton(IMPORTPOINTS,new ImportAction(ResultTable,40,4,1,1),ReasultPanel);
+        ClearButton = addButton(CLEARPOINTS,new ClearAction(ResTab,1),ReasultPanel);
+        SaveResultsButton = addButton(SAVERS,new SaveAction(ResTab),ReasultPanel);
+        ImportCoordsButton = addButton(IMPORTPOINTS,new ImportAction(ResTab,40,4,1,1),ReasultPanel);
     }
 
     private void fillthePanel(int rows,int cols, int hgap, int vgap, JPanel FlowPanel,JPanel GridPanel){
@@ -165,28 +165,43 @@ public class StraightLane extends JFrame implements StringRes {
 
         }
         private void count(){
-                try{
-                    Fp=new BasePoint(Double.parseDouble(BaseText[0][0].getText()),Double.parseDouble(BaseText[0][1].getText()),Double.parseDouble(BaseText[0][2].getText()));
-                    Sp=new BasePoint(Double.parseDouble(BaseText[0][0].getText()),Double.parseDouble(BaseText[0][1].getText()),Double.parseDouble(BaseText[0][2].getText()));
-                    BL=new BaseLine(Fp,Sp);
+                LofP.add(0,null);
+                LofR.add(0,null);
+            try{
+                Fp=new BasePoint(Double.parseDouble(BaseText[0][1].getText()),Double.parseDouble(BaseText[1][1].getText()),Double.parseDouble(BaseText[2][1].getText()),Double.parseDouble(BaseText[3][1].getText()));
+                System.out.println(Fp.toString());
+                Sp=new BasePoint(Double.parseDouble(BaseText[1][2].getText()),Double.parseDouble(BaseText[2][2].getText()),Double.parseDouble(BaseText[3][2].getText()),Double.parseDouble(BaseText[3][2].getText()));
+                System.out.println(Sp.toString());
+                BL=new BaseLine(Fp,Sp);
+            }catch (Exception ex){
+                chekAlllane();
+            }
+            for (int i = 1; i<41;i++){
+                try {
+                    LofP.add(i, new SurveyPoint(ResTab[i][1].getText(), Double.parseDouble(ResTab[i][2].getText()), Double.parseDouble(ResTab[i][3].getText()), Double.parseDouble(ResTab[i][4].getText())));
                 }catch (Exception ex){
-                    chekAlllane();
-                    return;
+                    LofP.add(i, null);
                 }
-                try{
-                    for (int i = 0; i<40;i++){
-                        try{
-                            LofP.add(i,new SurveyPoint(ResultTable[i][1].getText(),Double.parseDouble(ResultTable[i][2].getText()),Double.parseDouble(ResultTable[i][2].getText()),Double.parseDouble(ResultTable[i][3].getText())));
-                        }catch (Exception ex){
 
-                        }
-                    }
-                    for (int i =0;i<LofR.size();i++){
-                        LofR.add(i,new Result(BL,LofP.get(i)));
-                    }
-                }catch (Exception ex){
 
+            }
+            System.out.println(LofP.get(2));
+            for (int i =1;i<41;i++) {
+                if (LofP.get(i)==null){
+                }else {
+                LofR.add(i,new Result(BL,LofP.get(i)));
+                ResTab[i][5].setText(String.format("%3s",LofR.get(i).getLength()));
+                ResTab[i][6].setText(String.format("%3s",LofR.get(i).getGorPiket()));
+                ResTab[i][7].setText(String.format("%3s",LofR.get(i).getPK()));
+                ResTab[i][8].setText(String.format("%3s",LofR.get(i).getDev()));
+                ResTab[i][9].setText(String.format("%3s",LofR.get(i).getDeltaH()));
+                ResTab[i][10].setText(String.format("%3s",LofR.get(i).getRadius()));
                 }
+                //String result = point.toString() + "\t" + getLength() + "\t" + getGorPiket() + "\t" + getPK() +  "\t" + getDev() + "\t" + getDeltaH() + "\t" + getRadius();
+            }
+
+
+
 
 
 
