@@ -284,21 +284,23 @@ public class StraightLane extends JFrame implements StringRes {
             int ret = fileopen.showDialog(null, "Открыть файл");
             if (ret == JFileChooser.APPROVE_OPTION) {
                 File Myfile = fileopen.getSelectedFile();
-                if (getFileExtension(Myfile).equals(FileFormatSDR)) {
+
                     try {
                         FileReader filereader = new FileReader(Myfile);
                         BufferedReader reader = new BufferedReader(filereader);
                         String line = null;
                         while ((line = reader.readLine()) != null) {
                             Pspisok.add(line);
+
                         }
                         reader.close();
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
-                }
+
                 try{
                     for (int i = 4; i >= 0; i--) {
+
                         Pspisok.remove(i);
                     }
                 }catch(IndexOutOfBoundsException ie){
