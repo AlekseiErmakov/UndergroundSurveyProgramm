@@ -74,6 +74,7 @@ public class Result {
             x=P.getX();
             y=P.getY();
             h=P.getH();
+
         }
 
         public static double Rad(BaseLine LN,SurveyPoint P) {

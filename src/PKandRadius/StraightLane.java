@@ -219,9 +219,9 @@ public class StraightLane extends JFrame implements StringRes {
                         Double.parseDouble(BaseText[2][1].getText()),
                         Double.parseDouble(BaseText[3][1].getText()));
 
-                Sp = new BasePoint(Double.parseDouble(BaseText[1][2].getText()),
+                Sp = new BasePoint(Double.parseDouble(BaseText[0][2].getText()),
+                        Double.parseDouble(BaseText[1][2].getText()),
                         Double.parseDouble(BaseText[2][2].getText()),
-                        Double.parseDouble(BaseText[3][2].getText()),
                         Double.parseDouble(BaseText[3][2].getText()));
 
                 BL = new BaseLine(Fp, Sp);
