@@ -319,9 +319,19 @@ public class StraightLane extends JFrame implements StringRes {
                 }
                 String temp3 = temp1 + " " + temp2;
                 String[] point = temp3.split("\\s+");
-                System.out.println(point);
-                for (int i = 0; i < 4; i++) {
-                    ResTab[j + 1][i + 1].setText(point[i + 1]);
+
+                int b=4;
+                for (int i = point.length-1; i >= point.length-4; i--) {
+                    ResTab[j + 1][b].setText(point[i]);
+                    b--;
+                }
+                b =1;
+                String tempo ="";
+
+                for (int i =1;i<=point.length-4;i++){
+
+                    tempo = tempo+point[i]+" ";
+                    ResTab[j+1][b].setText(tempo);
                 }
             }
         }
